@@ -19,10 +19,10 @@ namespace FanControl.Liquidctl
 
             public static readonly string KEY = "Liquid temperature";
             public string Id => _id;
-            string _id;
+            readonly string _id;
 
             public string Name => _name;
-            string _name;
+            readonly string _name;
 
             public float? Value => _value;
             float _value;
@@ -146,7 +146,7 @@ namespace FanControl.Liquidctl
             }
 
             public static readonly string KEY = "Fan speed";
-            readonly List<int> _rpmLookup = new List<int>();
+            readonly List<int> _rpmLookup = [];
 
             public string Id => _id;
             readonly string _id;
