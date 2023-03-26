@@ -8,7 +8,7 @@ namespace FanControl.Liquidctl
         {
             public LiquidTemperature(LiquidctlStatusJSON output)
             {
-                _id = $"{output.Address}-liqtmp";
+                _id = $"{output.GetAddress()}-liqtmp";
                 _name = $"Liquid Temp. - {output.Description}";
                 UpdateFromJSON(output);
             }
@@ -34,7 +34,7 @@ namespace FanControl.Liquidctl
         {
             public PumpSpeed(LiquidctlStatusJSON output)
             {
-                _id = $"{output.Address}-pumprpm";
+                _id = $"{output.GetAddress()}-pumprpm";
                 _name = $"Pump - {output.Description}";
                 UpdateFromJSON(output);
             }
@@ -60,7 +60,7 @@ namespace FanControl.Liquidctl
         {
             public PumpDuty(LiquidctlStatusJSON output)
             {
-                _address = output.Address;
+                _address = output.GetAddress();
                 _id = $"{_address}-pumpduty";
                 _name = $"Pump Control - {output.Description}";
                 _rpmLookup = BuildRpmLookup($"Plugins\\lut\\{_name}.lut", 3000); // The most widespread Asatek Pumps have a ~3000 RPM limit
@@ -74,7 +74,7 @@ namespace FanControl.Liquidctl
             }
 
             public static readonly string KEY = "Pump speed";
-            readonly List<int> _rpmLookup = new List<int>();
+            readonly List<int> _rpmLookup = [];
 
             public string Id => _id;
             string _id;
@@ -105,7 +105,7 @@ namespace FanControl.Liquidctl
         {
             public FanSpeed(LiquidctlStatusJSON output)
             {
-                _id = $"{output.Address}-fanrpm";
+                _id = $"{output.GetAddress()}-fanrpm";
                 _name = $"Fan - {output.Description}";
                 UpdateFromJSON(output);
             }
@@ -132,8 +132,8 @@ namespace FanControl.Liquidctl
         {
             public FanControl(LiquidctlStatusJSON output)
             {
-                _address = output.Address;
-                _id = $"{output.Address}-fanctrl";
+                _address = output.GetAddress();
+                _id = $"{_address}-fanctrl";
                 _name = $"Fan Control - {output.Description}";
                 _rpmLookup = BuildRpmLookup($"Plugins\\lut\\{_name}.lut");
                 UpdateFromJSON(output);
@@ -150,7 +150,7 @@ namespace FanControl.Liquidctl
 
             public string Id => _id;
             readonly string _id;
-            string _address;
+            readonly string _address;
 
             public string Name => _name;
             readonly string _name;
