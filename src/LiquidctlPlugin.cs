@@ -33,6 +33,14 @@ namespace FanControl.Liquidctl
                     _container.FanSensors.Add(device.fanSpeed);
                     _container.ControlSensors.Add(device.fanControl);
                 }
+                for (int i = 0; i < 3; i++)
+                {
+                    if (device.hasMultipleFanSpeed[i])
+                    {
+                        _container.FanSensors.Add(device.fanSpeedMultiple[i]);
+                        _container.ControlSensors.Add(device.fanControlMultiple[i]);
+                    }
+                }
                 devices.Add(device);
             }
         }

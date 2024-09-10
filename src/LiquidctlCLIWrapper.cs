@@ -49,7 +49,7 @@ namespace FanControl.Liquidctl
         internal static void SetPump(string address, int value)
         {
             Process process = GetLiquidCtlBackend(address);
-            process.StandardInput.WriteLine($"set pump speed {(value)}");
+            process.StandardInput.WriteLine($"set pump speed {value}");
             JObject result = JObject.Parse(process.StandardOutput.ReadLine());
             string status = (string)result.SelectToken("status");
             if (status == "success")
@@ -60,7 +60,18 @@ namespace FanControl.Liquidctl
         internal static void SetFan(string address, int value)
         {
             Process process = GetLiquidCtlBackend(address);
-            process.StandardInput.WriteLine($"set fan speed {(value)}");
+            process.StandardInput.WriteLine($"set fan speed {value}");
+            JObject result = JObject.Parse(process.StandardOutput.ReadLine());
+            string status = (string)result.SelectToken("status");
+            if (status == "success")
+                return;
+            throw new Exception((string)result.SelectToken("data"));
+        }
+
+        internal static void SetFanNumber(string address, int index, int value)
+        {
+            Process process = GetLiquidCtlBackend(address);
+            process.StandardInput.WriteLine($"set fan{index} speed {value}");
             JObject result = JObject.Parse(process.StandardOutput.ReadLine());
             string status = (string)result.SelectToken("status");
             if (status == "success")
@@ -110,7 +121,8 @@ namespace FanControl.Liquidctl
             process.StartInfo.RedirectStandardInput = true;
 
             process.StartInfo.FileName = liquidctlexe;
-            switch (identifier.Key) {
+            switch (identifier.Key)
+            {
                 case "usb":
                     process.StartInfo.Arguments = $"--json --usb-port {identifier.Value} interactive";
                     break;
