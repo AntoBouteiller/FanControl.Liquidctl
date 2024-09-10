@@ -1,20 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using FanControl.Plugins;
+﻿using FanControl.Plugins;
 
 namespace FanControl.Liquidctl
 {
-    public class LiquidctlPlugin : IPlugin2
+    public class LiquidctlPlugin(IPluginLogger pluginLogger) : IPlugin2
     {
-        internal List<LiquidctlDevice> devices = new List<LiquidctlDevice>();
-        internal IPluginLogger logger;
+        internal List<LiquidctlDevice> devices = [];
+        internal IPluginLogger logger = pluginLogger;
 
         public string Name => "LiquidctlPlugin";
-
-        public LiquidctlPlugin(IPluginLogger pluginLogger)
-        {
-            logger = pluginLogger;
-        }
 
         public void Initialize()
         {
@@ -24,10 +17,10 @@ namespace FanControl.Liquidctl
 
         public void Load(IPluginSensorsContainer _container)
         {
-            List<LiquidctlStatusJSON> input = LiquidctlCLIWrapper.ReadStatus();
+            List<LiquidctlStatusJSON> input = LiquidctlCLIWrapper.ReadStatus() ?? [];
             foreach (LiquidctlStatusJSON liquidctl in input)
             {
-                LiquidctlDevice device = new LiquidctlDevice(liquidctl, logger);
+                LiquidctlDevice device = new(liquidctl, logger);
                 logger.Log(device.GetDeviceInfo());
                 if (device.hasPumpSpeed)
                     _container.FanSensors.Add(device.pumpSpeed);

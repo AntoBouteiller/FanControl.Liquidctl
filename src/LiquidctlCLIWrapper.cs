@@ -8,17 +8,17 @@ namespace FanControl.Liquidctl
 {
     internal static class LiquidctlCLIWrapper
     {
-        public static string liquidctlexe = "Plugins\\liquidctl.exe"; //TODO extract path to executable to config
+        public static string liquidctlexe = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "liquidctl.exe");
         internal static void Initialize()
         {
             LiquidctlCall($"--json initialize all");
         }
-        internal static List<LiquidctlStatusJSON> ReadStatus()
+        internal static List<LiquidctlStatusJSON>? ReadStatus()
         {
             Process process = LiquidctlCall($"--json status");
             return JsonConvert.DeserializeObject<List<LiquidctlStatusJSON>>(process.StandardOutput.ReadToEnd());
         }
-        internal static List<LiquidctlStatusJSON> ReadStatus(string address)
+        internal static List<LiquidctlStatusJSON>? ReadStatus(string address)
         {
             Process process = LiquidctlCall($"--json --address {address} status");
             return JsonConvert.DeserializeObject<List<LiquidctlStatusJSON>>(process.StandardOutput.ReadToEnd());
@@ -27,7 +27,7 @@ namespace FanControl.Liquidctl
         {
             LiquidctlCall($"--address {address} set pump speed {(value)}");
         }
-        
+
         internal static void SetFan(string address, int value)
         {
             LiquidctlCall($"--address {address} set fan speed {(value)}");
